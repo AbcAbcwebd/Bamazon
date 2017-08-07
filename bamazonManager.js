@@ -29,7 +29,16 @@ function viewProducts(){
         console.log(element.id + ")-- " + element.product_name + " (" + element.stock_quantity + ") -- " + element.price);
     });
   });
-}
+};
+
+function viewLowInventory(){
+  connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, results) {
+    if (err) throw err;
+    results.forEach(function(element) {
+        console.log(element.id + ")-- " + element.product_name + " (" + element.stock_quantity + ") -- " + element.price);
+    });
+  });
+};
 
 function start(){
   inquirer
@@ -47,7 +56,7 @@ function start(){
               viewProducts();
               break;
           case 'View Low Inventory':
-//              code block
+              viewLowInventory()
               break;
           case 'Add to Inventory':
 //              code block
