@@ -40,6 +40,27 @@ function viewLowInventory(){
   });
 };
 
+function addInventory(){
+  var productsArray = [];
+  connection.query("SELECT * FROM products", function(err, results) {
+    if (err) throw err;
+    results.forEach(function(element) {
+        productsArray.push(element.id + ")-- " + element.product_name + " (" + element.stock_quantity + ") -- " + element.price);
+    });
+  });
+  inquirer
+    .prompt([
+      {
+        type: 'rawlist',
+        name: 'itemAdd',
+        message: "Which product would you like to add inventory for?",
+        choices: productsArray
+      }
+    .then(function(answer) {
+
+    };
+};
+
 function start(){
   inquirer
     .prompt([
@@ -59,7 +80,7 @@ function start(){
               viewLowInventory()
               break;
           case 'Add to Inventory':
-//              code block
+              addInventory()
               break;
           case 'Add New Product':
 //              code block
