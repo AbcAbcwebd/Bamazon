@@ -87,6 +87,42 @@ function addInventory(){
     });
 };
 
+function addNewProduct(){
+  inquirer
+  .prompt([
+    {
+      type: 'input',
+      name: 'productName',
+      message: 'What is the name of the product you want to add?'
+    }, 
+    {
+      type: 'input',
+      name: 'department',
+      message: 'What department does this product belong in?'
+    },
+    {
+      type: 'input',
+      name: 'price',
+      message: 'How much does this product cost?'
+    }, 
+    {
+      type: 'input',
+      name: 'count',
+      message: 'How many units are available?'
+    }
+  ])
+  .then(function(answer) {
+    // Basic validation 
+    var localPrice = answer.price.replace('$', '');
+
+    var sql = "INSERT INTO products (product_name, department_name, price, stock_quantity, total_revenue) VALUES ('" + answer.productName + "', '" + answer.department + "', " + localPrice + ", " + answer.count + ", 0);";
+    connection.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log("1 record inserted");
+    });
+  });
+};
+
 function start(){
   inquirer
     .prompt([
@@ -109,7 +145,7 @@ function start(){
               addInventory()
               break;
           case 'Add New Product':
-//              code block
+              addNewProduct()
               break;
           default:
               console.log("No menu item selected.");
