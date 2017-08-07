@@ -22,12 +22,32 @@ connection.connect(function(err) {
   start();
 });
 
+// Function to run when a task is complete.
+function taskComplete(){
+  inquirer
+  .prompt([
+    {
+      type: 'confirm',
+      name: 'exit',
+      message: 'Do you want to exit the program?'
+    }
+  ])
+  .then(function(answer) {
+    if (answer.exit){
+      connection.end();
+    } else {
+      start();
+    };
+  });
+};
+
 function viewProducts(){
   connection.query("SELECT * FROM products", function(err, results) {
     if (err) throw err;
     results.forEach(function(element) {
         console.log(element.id + ")-- " + element.product_name + " (" + element.stock_quantity + ") -- " + element.price);
     });
+    taskComplete();
   });
 };
 
@@ -37,6 +57,7 @@ function viewLowInventory(){
     results.forEach(function(element) {
         console.log(element.id + ")-- " + element.product_name + " (" + element.stock_quantity + ") -- " + element.price);
     });
+    taskComplete();
   });
 };
 
@@ -54,6 +75,7 @@ function updateDatabaseInventory(updateId, newQuant){
     function(error) {
       if (error) throw error;
       console.log("Quantity updated to " + newQuant + ".");
+      taskComplete();
     }
   );
 }
@@ -119,6 +141,7 @@ function addNewProduct(){
     connection.query(sql, function (err, result) {
       if (err) throw err;
       console.log("1 record inserted");
+      taskComplete();
     });
   });
 };
