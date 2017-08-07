@@ -40,25 +40,51 @@ function viewLowInventory(){
   });
 };
 
+function updateDatabaseInventory(updateId, newQuant){
+  connection.query(
+    "UPDATE products SET ? WHERE ?",
+    [
+      {
+        stock_quantity: newQuant,
+      },
+      {
+        id: updateId
+      }
+    ],
+    function(error) {
+      if (error) throw error;
+      console.log("Quantity updated to " + newQuant + ".");
+    }
+  );
+}
+
 function addInventory(){
   var productsArray = [];
   connection.query("SELECT * FROM products", function(err, results) {
     if (err) throw err;
     results.forEach(function(element) {
-        productsArray.push(element.id + ")-- " + element.product_name + " (" + element.stock_quantity + ") -- " + element.price);
+        productsArray.push(element.product_name + " (" + element.stock_quantity + ") -- " + element.id);
     });
-  });
-  inquirer
-    .prompt([
-      {
-        type: 'rawlist',
-        name: 'itemAdd',
-        message: "Which product would you like to add inventory for?",
-        choices: productsArray
-      }
-    .then(function(answer) {
-
-    };
+    inquirer
+      .prompt([
+        {
+          type: 'rawlist',
+          name: 'itemAdd',
+          message: "Which product would you like to add inventory for?",
+          choices: productsArray
+        },
+        {
+          type: 'input',
+          name: 'quantAdd',
+          message: "What is the updated quantity?"
+        }
+      ])
+      .then(function(answer) {
+        var addID =  answer.itemAdd.split('-- ')[1];
+        var countUpdate = answer.quantAdd;
+        updateDatabaseInventory(addID, countUpdate);
+      });
+    });
 };
 
 function start(){
@@ -88,6 +114,5 @@ function start(){
           default:
               console.log("No menu item selected.");
       };
-      connection.end(); 
     });
 };
