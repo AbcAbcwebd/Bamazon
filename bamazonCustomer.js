@@ -23,9 +23,6 @@ connection.connect(function(err) {
 });
 
 function completePurchase(product_id, new_quantity, sales_value, new_total_revenue){
-  console.log(product_id)
-  console.log(new_quantity)
-  console.log(new_total_revenue)
   connection.query(
     "UPDATE products SET ? WHERE ?",
     [
@@ -66,15 +63,13 @@ function displayItems(){
     .then(function(answer) {
       // The minus one accounts for indexes starting at 0 vs. product IDs starting at 1.
       var purchaseItem = answer.productBuy - 1;
-      if (purchaseItem.stock_quantity < answer.quantity){
-        console.log("Sorry, insufficient quantity for " + purchaseItem.product_name);
-        // If we're sold out, the funciton is called again because we still want you to buy stuff! 
-        window.setTimeout(displayItems, 3000);
+      if (results[purchaseItem].stock_quantity < answer.quantity){
+        console.log("Sorry, insufficient quantity for " + results[purchaseItem].product_name);
       } else {
-        var updatedQuantity = purchaseItem.stock_quantity - answer.quantity;
-        var totalSalesValue = answer.quantity * purchaseItem.price;
-        var updatedTotalRevenue = purchaseItem.total_revenue + totalSalesValue;
-        completePurchase(purchaseItem.id, updatedQuantity, totalSalesValue, updatedTotalRevenue);
+        var updatedQuantity = results[purchaseItem].stock_quantity - answer.quantity;
+        var totalSalesValue = answer.quantity * results[purchaseItem].price;
+        var updatedTotalRevenue = results[purchaseItem].total_revenue + totalSalesValue;
+        completePurchase(results[purchaseItem].id, updatedQuantity, totalSalesValue, updatedTotalRevenue);
       }
       connection.end(); 
     });
