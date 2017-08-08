@@ -110,6 +110,14 @@ function addInventory(){
 };
 
 function addNewProduct(){
+  var activeDepartments = [];
+  connection.query("SELECT * FROM departments", function(err, results) {
+    if (err) throw err;
+    results.forEach(function(element) {
+        productsArray.push(element.department_name);
+    connection.end();
+    });
+  });
   inquirer
   .prompt([
     {
@@ -118,9 +126,10 @@ function addNewProduct(){
       message: 'What is the name of the product you want to add?'
     }, 
     {
-      type: 'input',
+      type: 'rawlist',
       name: 'department',
-      message: 'What department does this product belong in?'
+      message: 'What department does this product belong in?',
+      choices: activeDepartments
     },
     {
       type: 'input',
