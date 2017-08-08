@@ -116,7 +116,6 @@ function addNewProduct(){
     results.forEach(function(element) {
         activeDepartments.push(element.department_name);
     });
-//    connection.end();
   });
   inquirer
   .prompt([
