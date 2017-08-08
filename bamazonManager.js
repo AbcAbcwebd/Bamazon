@@ -114,9 +114,9 @@ function addNewProduct(){
   connection.query("SELECT * FROM departments", function(err, results) {
     if (err) throw err;
     results.forEach(function(element) {
-        productsArray.push(element.department_name);
-    connection.end();
+        activeDepartments.push(element.department_name);
     });
+//    connection.end();
   });
   inquirer
   .prompt([

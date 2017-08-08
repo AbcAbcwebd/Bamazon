@@ -43,13 +43,9 @@ function taskComplete(){
 };
 
 function viewSales(){
-  console.log("Running function")
   connection.query("SELECT departments.id, departments.department_name, departments.over_head_costs, SUM(products.total_revenue) AS product_sales, (SUM(products.total_revenue) - departments.over_head_costs) AS total_profit FROM departments LEFT JOIN products ON departments.department_name = products.department_name GROUP BY departments.id;", function(err, results) {
-    console.log("MySQL call made")
-//    console.log(results)
     if (err) throw err;
     console.table(results);
-    console.log("table displayed")
     taskComplete();
   });
 };
